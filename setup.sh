@@ -15,6 +15,7 @@ domain_validator() {
 }
 
 sudo apt update
+# select "Internet Site"
 sudo apt install dialog postfix postfix-mysql dovecot-core dovecot-imapd dovecot-sieve dovecot-lmtpd dovecot-mysql opendkim spamassassin spamc mariadb-server -y
 
 whcih opendkim-genkey > /dev/null 2>&1 || sudo apt install opendkim-tools
