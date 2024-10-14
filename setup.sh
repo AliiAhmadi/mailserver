@@ -51,7 +51,7 @@ Remove anonymous users
 Disallow root login remotely
 Remove test database and access to it
 Reload privilege tables now\e[0m"
-mysql_secure_installation
+sudo mysql_secure_installation
 
 echo "\e[32mCreating database\e[0m"
 name=$(dialog --inputbox "Please enter a name for the first email address.\\nEx. maik" 10 60 3>&1 1>&2 2>&3 3>&1) || exit 1
