@@ -25,10 +25,10 @@ while true; do
 
     if domain_validator "$domain"; then
         # Its ok
-        echo -e "\e[32m]Domain validated.\e[0m]"
+        echo -e "\e[32mDomain validated.\e[0m"
         break
     else
-        echo -e "\e[31m]Invalid domain format.\e[0m]"
+        echo -e "\e[31mInvalid domain format.\e[0m"
     fi
 done
 
