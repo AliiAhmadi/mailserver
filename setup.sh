@@ -44,3 +44,14 @@ Use Let's Encrypt's Certbot to get that and then rerun this script.
 
 You may need to set up a dummy $mail_full_domain site in nginx or Apache for that to work." && exit
 
+echo -e "\e[32mConfiguring MySQL\e[0m"
+echo -e "\e[32mLeave current password empty
+Select no for set root password
+Remove anonymous users
+Disallow root login remotely
+Remove test database and access to it
+Reload privilege tables now\e[0m"
+mysql_secure_installation
+
+echo "\e[32mCreating database\e[0m"
+name=$(dialog --inputbox "Please enter a name for the first email address.\\nEx. maik" 10 60 3>&1 1>&2 2>&3 3>&1) || exit 1
