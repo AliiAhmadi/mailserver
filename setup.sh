@@ -112,49 +112,49 @@ VALUES
 
 echo -e "\e[32mCreating Postfix\e[0m"
 
-postconf -e "smtpd_tls_key_file=$certdir/privkey.pem"
-postconf -e "smtpd_tls_cert_file=$certdir/fullchain.pem"
-postconf -e "smtpd_tls_security_level = may"
-postconf -e "smtpd_tls_auth_only = yes"
-postconf -e "smtp_tls_security_level = may"
-postconf -e "smtp_tls_loglevel = 1"
-postconf -e "smtp_tls_CAfile=$certdir/cert.pem"
-postconf -e "smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1"
-postconf -e "smtp_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1"
-postconf -e "smtpd_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1"
-postconf -e "smtp_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1"
-postconf -e "tls_preempt_cipherlist = yes"
-postconf -e "smtpd_tls_exclude_ciphers = aNULL, LOW, EXP, MEDIUM, ADH, AECDH, MD5, DSS, ECDSA, CAMELLIA128, 3DES, CAMELLIA256, RSA+AES, eNULL"
+sudo postconf -e "smtpd_tls_key_file=$certdir/privkey.pem"
+sudo postconf -e "smtpd_tls_cert_file=$certdir/fullchain.pem"
+sudo postconf -e "smtpd_tls_security_level = may"
+sudo postconf -e "smtpd_tls_auth_only = yes"
+sudo postconf -e "smtp_tls_security_level = may"
+sudo postconf -e "smtp_tls_loglevel = 1"
+sudo postconf -e "smtp_tls_CAfile=$certdir/cert.pem"
+sudo postconf -e "smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1"
+sudo postconf -e "smtp_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1"
+sudo postconf -e "smtpd_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1"
+sudo postconf -e "smtp_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1"
+sudo postconf -e "tls_preempt_cipherlist = yes"
+sudo postconf -e "smtpd_tls_exclude_ciphers = aNULL, LOW, EXP, MEDIUM, ADH, AECDH, MD5, DSS, ECDSA, CAMELLIA128, 3DES, CAMELLIA256, RSA+AES, eNULL"
 
-postconf -e "smtpd_sasl_auth_enable = yes"
-postconf -e "smtpd_sasl_type = dovecot"
-postconf -e "smtpd_sasl_path = private/auth"
+sudo postconf -e "smtpd_sasl_auth_enable = yes"
+sudo postconf -e "smtpd_sasl_type = dovecot"
+sudo postconf -e "smtpd_sasl_path = private/auth"
 
-postconf -e "smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination"
-postconf -e "mydestination = localhost"
-postconf -e "myhostname = $mail_full_domain"
-postconf -e "virtual_transport = lmtp:unix:private/dovecot-lmtp"
+sudo postconf -e "smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination"
+sudo postconf -e "mydestination = localhost"
+sudo postconf -e "myhostname = $mail_full_domain"
+sudo postconf -e "virtual_transport = lmtp:unix:private/dovecot-lmtp"
 
-postconf -e "virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf"
-postconf -e "virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf"
-postconf -e "virtual_alias_maps = mysql:/etc/postfix/mysql-virtual-alias-maps.cf"
+sudo postconf -e "virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf"
+sudo postconf -e "virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf"
+sudo postconf -e "virtual_alias_maps = mysql:/etc/postfix/mysql-virtual-alias-maps.cf"
 
 ###
-echo "user = mail
+sudo echo "user = mail
 password = this_is_a_super_strong_password
 hosts = 127.0.0.1
 dbname = servermail
 query = SELECT 1 FROM virtual_domains WHERE name='%s'" > /etc/postfix/mysql-virtual-mailbox-domains.cf
 
 ###
-echo "user = mail
+sudo echo "user = mail
 password = this_is_a_super_strong_password
 hosts = 127.0.0.1
 dbname = servermail
 query = SELECT 1 FROM virtual_users WHERE email='%s'" > /etc/postfix/mysql-virtual-mailbox-maps.cf
 
 ###
-echo "user = mail
+sudo echo "user = mail
 password = this_is_a_super_strong_password
 hosts = 127.0.0.1
 dbname = servermail
@@ -163,9 +163,9 @@ query = SELECT email FROM virtual_users WHERE email='%s' UNION SELECT destinatio
 
 
 
-sed -i "/^\s*-o/d;/^\s*submission/d;/^\s*smtp/d" /etc/postfix/master.cf
+sudo sed -i "/^\s*-o/d;/^\s*submission/d;/^\s*smtp/d" /etc/postfix/master.cf
 
-echo "smtp unix - - n - - smtp
+sudo echo "smtp unix - - n - - smtp
 smtp inet n - y - - smtpd
   -o content_filter=spamassassin
 submission inet n       -       y       -       -       smtpd
@@ -185,7 +185,7 @@ spamassassin unix -     n       n       -       -       pipe
 ### -
 echo -e "\e[32mCreating Dovecot config\e[0m"
 
-echo "# Dovecot config
+sudo echo "# Dovecot config
 # Note that in the dovecot conf, you can use:
 # %u for username
 # %n for the name in name@domain.tld
@@ -354,14 +354,14 @@ grep -q "^Socket\s*inet:12301@localhost" /etc/opendkim.conf || echo "Socket inet
 
 sed -i "/^SOCKET/d" /etc/default/opendkim && echo "SOCKET=\"inet:12301@localhost\"" >> /etc/default/opendkim
 
-postconf -e "smtpd_sasl_security_options = noanonymous, noplaintext"
-postconf -e "smtpd_sasl_tls_security_options = noanonymous"
-postconf -e "myhostname = $mail_full_domain"
-postconf -e "milter_default_action = accept"
-postconf -e "milter_protocol = 6"
-postconf -e "smtpd_milters = inet:localhost:12301"
-postconf -e "non_smtpd_milters = inet:localhost:12301"
-postconf -e "mailbox_command = /usr/lib/dovecot/deliver"
+sudo postconf -e "smtpd_sasl_security_options = noanonymous, noplaintext"
+sudo postconf -e "smtpd_sasl_tls_security_options = noanonymous"
+sudo postconf -e "myhostname = $mail_full_domain"
+sudo postconf -e "milter_default_action = accept"
+sudo postconf -e "milter_protocol = 6"
+sudo postconf -e "smtpd_milters = inet:localhost:12301"
+sudo postconf -e "non_smtpd_milters = inet:localhost:12301"
+sudo postconf -e "mailbox_command = /usr/lib/dovecot/deliver"
 
 for x in spamassassin opendkim dovecot postfix; do
 	printf "Restarting %s..." "$x"
