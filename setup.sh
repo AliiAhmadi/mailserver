@@ -49,7 +49,7 @@ Remove test database and access to it
 Reload privilege tables now\e[0m"
 sudo mysql_secure_installation
 
-echo "\e[32mCreating database\e[0m"
+echo -e "\e[32mCreating database\e[0m"
 name=$(dialog --inputbox "Please enter a name for the first email address.\\nEx. Lexur" 10 60 3>&1 1>&2 2>&3 3>&1) || exit 1
 pass1=$(dialog --no-cancel --passwordbox "Enter a password for that inbox." 10 60 3>&1 1>&2 2>&3 3>&1)
 pass2=$(dialog --no-cancel --passwordbox "Retype password." 10 60 3>&1 1>&2 2>&3 3>&1)
@@ -110,7 +110,7 @@ VALUES
 ('1', '1', 'example@$domain', '$name@$domain');
 " | mysql -u root
 
-echo "\e[32mCreating Postfix\e[0m"
+echo -e "\e[32mCreating Postfix\e[0m"
 
 postconf -e "smtpd_tls_key_file=$certdir/privkey.pem"
 postconf -e "smtpd_tls_cert_file=$certdir/fullchain.pem"
@@ -183,7 +183,7 @@ spamassassin unix -     n       n       -       -       pipe
 
 
 ### -
-echo "\e[32mCreating Dovecot config\e[0m"
+echo -e "\e[32mCreating Dovecot config\e[0m"
 
 echo "# Dovecot config
 # Note that in the dovecot conf, you can use:
@@ -304,7 +304,7 @@ default_pass_scheme = SHA512-CRYPT
 password_query = SELECT email as user, password FROM virtual_users WHERE email='%u';" > /etc/dovecot/dovecot-sql.conf.ext
 
 ####
-echo "\e[32mCreating mail user\e[0m"
+echo -e "\e[32mCreating mail user\e[0m"
 mkdir /var/lib/dovecot/sieve/
 
 
